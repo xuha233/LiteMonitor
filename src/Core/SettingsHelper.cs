@@ -68,6 +68,9 @@ namespace LiteMonitor
             // Caller (AppActions.ApplyAllSettings) is responsible for syncing language state.
             // s.SyncToLanguage();
             
+            // ★★★ 初始化默认快捷键配置 ★★★
+            s.InitDefaultHotkeys();
+            
             s.InternAllStrings();
             
             return s;

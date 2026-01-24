@@ -19,6 +19,9 @@ namespace LiteMonitor
         // ★★★ 双助手架构 ★★★
         private readonly MainFormWinHelper _winHelper;
         private readonly MainFormBizHelper _bizHelper;
+        
+        // ★★★ 热键管理器 ★★★
+        private HotkeyManager? _hotkeyManager;
 
         private Point _dragOffset;
         private bool _uiDragging = false;
@@ -142,6 +145,9 @@ namespace LiteMonitor
             // 原始代码是在构造函数末尾启动 Task
             // 之前解耦时移到了 OnShown 里，这可能导致时序差异（OnShown 之前会有一瞬间的默认绘制）
             _winHelper.StartFadeIn(_cfg.Opacity);
+
+            // ★★★ 初始化热键管理器 ★★★
+            InitializeHotkeyManager();
 
             // 3. 事件绑定
             BindEvents();
@@ -270,6 +276,48 @@ namespace LiteMonitor
             }
         }
 
+        // ========== 热键管理器相关方法 ==========
+        
+        /// <summary>
+        /// 初始化热键管理器
+        /// </summary>
+        private void InitializeHotkeyManager()
+        {
+            try
+            {
+                _hotkeyManager = new HotkeyManager(_cfg, this, _ui);
+                _hotkeyManager.Initialize();
+                
+                // 记录初始化成功
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] 热键管理器初始化成功");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] 热键管理器初始化失败: {ex.Message}");
+                // 不抛出异常，允许程序继续运行
+            }
+        }
+        
+        /// <summary>
+        /// 处理Windows消息（用于全局热键）
+        /// </summary>
+        protected override void WndProc(ref Message m)
+        {
+            // 先让热键管理器处理消息
+            _hotkeyManager?.ProcessMessage(ref m);
+            
+            // 调用基类处理
+            base.WndProc(ref m);
+        }
+        
+        /// <summary>
+        /// 重新加载热键配置
+        /// </summary>
+        public void ReloadHotkeys()
+        {
+            _hotkeyManager?.Reload();
+        }
+
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             _cfg.Save(); 
@@ -277,6 +325,9 @@ namespace LiteMonitor
             src.WebServer.LiteWebServer.Instance?.Stop();
             
             base.OnFormClosed(e);
+            
+            // 释放热键管理器
+            _hotkeyManager?.Dispose();
             
             _ui?.Dispose();
             _bizHelper.Dispose();

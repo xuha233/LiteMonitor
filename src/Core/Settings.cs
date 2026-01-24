@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json.Serialization;
+using System.Windows.Forms;
 using LiteMonitor.src.Core;
 namespace LiteMonitor
 {
@@ -124,6 +125,9 @@ namespace LiteMonitor
         public Dictionary<string, string> GroupAliases { get; set; } = new Dictionary<string, string>();
         public List<MonitorItemConfig> MonitorItems { get; set; } = new List<MonitorItemConfig>();
         public List<PluginInstanceConfig> PluginInstances { get; set; } = new List<PluginInstanceConfig>();
+        
+        // ★★★ [新增] 快捷键配置 ★★★
+        public List<HotkeyConfig> Hotkeys { get; set; } = new List<HotkeyConfig>();
 
         // ★★★ [新增] 极简样式封装（复制到 Settings 类里） ★★★
         public struct TBStyle { 
@@ -154,6 +158,93 @@ namespace LiteMonitor
         }
 
         // Helper method to get taskbar style moved to SettingsHelper
+
+        /// <summary>
+        /// 初始化默认快捷键配置
+        /// </summary>
+        public void InitDefaultHotkeys()
+        {
+            if (Hotkeys == null || Hotkeys.Count == 0)
+            {
+                Hotkeys = new List<HotkeyConfig>
+                {
+                    // 显示/隐藏主窗口 - 全局热键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.ToggleVisibility.ToString(),
+                        Description = "显示/隐藏主窗口",
+                        Enabled = true,
+                        Key = Keys.F12,
+                        Modifiers = ModifierKeys.None,
+                        IsGlobal = true,
+                        RequireAdmin = false
+                    },
+                    // 切换竖屏/横屏模式 - 应用级快捷键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.ToggleLayoutMode.ToString(),
+                        Description = "切换竖屏/横屏模式",
+                        Enabled = true,
+                        Key = Keys.F5,
+                        Modifiers = ModifierKeys.None,
+                        IsGlobal = false,
+                        RequireAdmin = false
+                    },
+                    // 切换鼠标穿透 - 应用级快捷键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.ToggleClickThrough.ToString(),
+                        Description = "切换鼠标穿透",
+                        Enabled = true,
+                        Key = Keys.P,
+                        Modifiers = ModifierKeys.Control,
+                        IsGlobal = false,
+                        RequireAdmin = false
+                    },
+                    // 切换任务栏显示 - 全局热键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.ToggleTaskbar.ToString(),
+                        Description = "切换任务栏显示",
+                        Enabled = true,
+                        Key = Keys.F11,
+                        Modifiers = ModifierKeys.None,
+                        IsGlobal = true,
+                        RequireAdmin = false
+                    },
+                    // 清理内存 - 应用级快捷键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.CleanMemory.ToString(),
+                        Description = "清理内存",
+                        Enabled = true,
+                        Key = Keys.M,
+                        Modifiers = ModifierKeys.Control,
+                        IsGlobal = false,
+                        RequireAdmin = false
+                    },
+                    // 显示/隐藏系统托盘图标 - 应用级快捷键
+                    new HotkeyConfig
+                    {
+                        ActionId = HotkeyAction.ToggleTrayIcon.ToString(),
+                        Description = "显示/隐藏系统托盘图标",
+                        Enabled = true,
+                        Key = Keys.Y,
+                        Modifiers = ModifierKeys.Control,
+                        IsGlobal = false,
+                        RequireAdmin = false
+                    }
+                };
+            }
+        }
+
+        /// <summary>
+        /// 获取指定动作的快捷键配置
+        /// </summary>
+        public HotkeyConfig? GetHotkey(HotkeyAction action)
+        {
+            return Hotkeys?.FirstOrDefault(h => h.ActionId == action.ToString() && h.Enabled);
+        }
 
         public Settings DeepClone()
         {
@@ -263,5 +354,72 @@ namespace LiteMonitor
         // 目标列表 (Scope="target")
         // 每个元素是一个 Dictionary，存储该目标的所有 target 参数
         public List<Dictionary<string, string>> Targets { get; set; } = new List<Dictionary<string, string>>();
+    }
+
+    // ====== 快捷键配置相关类 ======
+    
+    /// <summary>
+    /// 修饰键枚举
+    /// </summary>
+    [Flags]
+    public enum ModifierKeys
+    {
+        None = 0,
+        Alt = 1,
+        Control = 2,
+        Shift = 4,
+        Win = 8
+    }
+
+    /// <summary>
+    /// 快捷键配置项
+    /// </summary>
+    public class HotkeyConfig
+    {
+        public string ActionId { get; set; } = "";           // 动作标识符
+        public string Description { get; set; } = "";        // 功能描述
+        public bool Enabled { get; set; } = true;           // 是否启用
+        public Keys Key { get; set; } = Keys.None;          // 主键
+        public ModifierKeys Modifiers { get; set; } = ModifierKeys.None; // 修饰键
+        public bool IsGlobal { get; set; } = false;         // 是否为全局热键
+        public bool RequireAdmin { get; set; } = false;     // 是否需要管理员权限
+        
+        // 显示用的字符串表示
+        [JsonIgnore]
+        public string DisplayString
+        {
+            get
+            {
+                var parts = new List<string>();
+                if ((Modifiers & ModifierKeys.Control) != 0) parts.Add("Ctrl");
+                if ((Modifiers & ModifierKeys.Alt) != 0) parts.Add("Alt");
+                if ((Modifiers & ModifierKeys.Shift) != 0) parts.Add("Shift");
+                if ((Modifiers & ModifierKeys.Win) != 0) parts.Add("Win");
+                
+                if (Key != Keys.None && Key != Keys.None)
+                {
+                    parts.Add(Key.ToString());
+                }
+                
+                return string.Join(" + ", parts);
+            }
+        }
+        
+        // 检查快捷键是否有效
+        [JsonIgnore]
+        public bool IsValid => Key != Keys.None && Key != Keys.None;
+    }
+
+    /// <summary>
+    /// 支持的快捷键动作枚举
+    /// </summary>
+    public enum HotkeyAction
+    {
+        ToggleVisibility,      // 显示/隐藏主窗口
+        ToggleLayoutMode,      // 切换竖屏/横屏模式
+        ToggleClickThrough,    // 切换鼠标穿透
+        ToggleTaskbar,         // 切换任务栏显示
+        CleanMemory,           // 清理内存
+        ToggleTrayIcon         // 显示/隐藏系统托盘图标
     }
 }

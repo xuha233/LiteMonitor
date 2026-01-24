@@ -221,6 +221,57 @@
     "PluginRemoveTarget": "Remove",
     "PluginTargetTitle": "# Target",
     "PluginAddTarget": "+ Add Target",
-    "PluginDeleteConfirm": "Delete this plugin copy?"
+    "PluginDeleteConfirm": "Delete this plugin copy?",
+    
+    "__Comment_Hotkeys__": "--- Hotkeys Translations ---",
+    "Hotkeys": "Hotkeys",
+    "HotkeySettings": "Hotkey Settings",
+    "HotkeyDescription": "Description",
+    "HotkeyKey": "Key",
+    "HotkeyModifiers": "Modifiers",
+    "HotkeyEnabled": "Enabled",
+    "HotkeyGlobal": "Global Hotkey",
+    "HotkeyRequireAdmin": "Require Admin",
+    "HotkeyConflict": "Conflict",
+    "HotkeyRecord": "Record",
+    "HotkeyClear": "Clear",
+    "HotkeyTest": "Test",
+    "HotkeyReset": "Reset to Default",
+    "HotkeyImport": "Import",
+    "HotkeyExport": "Export",
+    "HotkeyActions": {
+      "ToggleVisibility": "Show/Hide Main Window",
+      "ToggleLayoutMode": "Toggle Vertical/Horizontal Mode",
+      "ToggleClickThrough": "Toggle Click Through",
+      "ToggleTaskbar": "Toggle Taskbar Display",
+      "CleanMemory": "Clean Memory",
+      "ToggleTrayIcon": "Show/Hide Tray Icon"
+    },
+    "HotkeyTips": {
+      "GlobalHotkeyTip": "Global hotkeys work even when program is minimized",
+      "AppHotkeyTip": "Application hotkeys work only when window is active",
+      "ConflictTip": "⚠️ Red indicates conflict with other programs",
+      "AdminTip": "⚠️ Some global hotkeys may require admin privileges",
+      "RecordTip": "Click 'Record' then press desired key combination",
+      "DefaultTip": "Reset will restore default hotkey configuration"
+    },
+    "HotkeyModifierNames": {
+      "None": "None",
+      "Ctrl": "Ctrl",
+      "Alt": "Alt",
+      "Shift": "Shift",
+      "Win": "Win"
+    },
+    "HotkeyMessages": {
+      "Registered": "Hotkey registered successfully",
+      "Conflict": "Hotkey registration failed: conflict with other program",
+      "Invalid": "Invalid hotkey combination",
+      "Recording": "Recording... Press key combination",
+      "Recorded": "Hotkey recorded",
+      "Cleared": "Hotkey cleared",
+      "Reset": "Hotkeys reset to default",
+      "Saved": "Hotkey configuration saved",
+      "Loaded": "Hotkey configuration loaded"
+    }
   }
 }

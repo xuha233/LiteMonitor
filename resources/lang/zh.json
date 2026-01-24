@@ -220,6 +220,57 @@
     "PluginRemoveTarget": "移除",
     "PluginTargetTitle": "# 监控目标",
     "PluginAddTarget": "+ 添加新监控目标",
-    "PluginDeleteConfirm": "确定要删除此插件副本吗？"
+    "PluginDeleteConfirm": "确定要删除此插件副本吗？",
+    
+    "__Comment_Hotkeys__": "--- 快捷键相关翻译 ---",
+    "Hotkeys": "快捷键",
+    "HotkeySettings": "快捷键设置",
+    "HotkeyDescription": "快捷键描述",
+    "HotkeyKey": "按键",
+    "HotkeyModifiers": "修饰键",
+    "HotkeyEnabled": "启用",
+    "HotkeyGlobal": "全局热键",
+    "HotkeyRequireAdmin": "需要管理员权限",
+    "HotkeyConflict": "热键冲突",
+    "HotkeyRecord": "录制快捷键",
+    "HotkeyClear": "清除",
+    "HotkeyTest": "测试",
+    "HotkeyReset": "重置为默认",
+    "HotkeyImport": "导入配置",
+    "HotkeyExport": "导出配置",
+    "HotkeyActions": {
+      "ToggleVisibility": "显示/隐藏主窗口",
+      "ToggleLayoutMode": "切换竖屏/横屏模式",
+      "ToggleClickThrough": "切换鼠标穿透",
+      "ToggleTaskbar": "切换任务栏显示",
+      "CleanMemory": "清理内存",
+      "ToggleTrayIcon": "显示/隐藏系统托盘图标"
+    },
+    "HotkeyTips": {
+      "GlobalHotkeyTip": "全局热键在程序最小化或后台时仍有效",
+      "AppHotkeyTip": "应用级快捷键仅在程序窗口激活时有效",
+      "ConflictTip": "⚠️红色表示热键与其他程序冲突",
+      "AdminTip": "⚠️某些全局热键可能需要管理员权限",
+      "RecordTip": "点击'录制'按钮，然后按下想要的快捷键组合",
+      "DefaultTip": "重置将恢复为默认快捷键配置"
+    },
+    "HotkeyModifierNames": {
+      "None": "无",
+      "Ctrl": "Ctrl",
+      "Alt": "Alt",
+      "Shift": "Shift",
+      "Win": "Win"
+    },
+    "HotkeyMessages": {
+      "Registered": "热键注册成功",
+      "Conflict": "热键注册失败：与其他程序冲突",
+      "Invalid": "无效的热键组合",
+      "Recording": "正在录制... 按下快捷键组合",
+      "Recorded": "快捷键已录制",
+      "Cleared": "快捷键已清除",
+      "Reset": "快捷键已重置为默认",
+      "Saved": "快捷键配置已保存",
+      "Loaded": "快捷键配置已加载"
+    }
   }
 }

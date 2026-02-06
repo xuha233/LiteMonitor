@@ -136,13 +136,13 @@ namespace LiteMonitor.src.UI
                 this.Show();
                 this.Refresh();
 
-                // 异步执行真实清理
-                await Task.Run(() => 
+                // 异步执行优化的内存清理
+                var result = await Task.Run(async () => 
                 {
                     // 限频变量：避免过于频繁刷新 UI 导致卡顿
                     long lastTick = 0;
 
-                    HardwareMonitor.Instance?.CleanMemory(progress => 
+                    return await MemoryCleaner.CleanAsync(progress => 
                     {
                         long now = DateTime.Now.Ticks;
                         // 如果进度未完成且距离上次刷新不足 15ms (约 60FPS)，则跳过刷新
@@ -162,10 +162,24 @@ namespace LiteMonitor.src.UI
                 // 确保显示 100%
                 UpdateProgress(100);
 
-                // 显示完成状态并关闭
-                _lblPercent.Text = "OK";
-                _lblTitle.Text = LanguageManager.T("Menu.CleanMemorySuccess");
-                await Task.Delay(800); // 停留0.8秒展示结果
+                // 显示详细的清理结果
+                if (result.IsSuccess && result.FreedMemoryMB > 0)
+                {
+                    _lblPercent.Text = $"-{result.FreedMemoryMB}MB";
+                    _lblTitle.Text = $"{LanguageManager.T("Menu.CleanMemorySuccess")} ({result.ProcessesCleaned} processes)";
+                }
+                else if (result.IsSuccess)
+                {
+                    _lblPercent.Text = "OK";
+                    _lblTitle.Text = LanguageManager.T("Menu.CleanMemorySuccess");
+                }
+                else
+                {
+                    _lblPercent.Text = "!";
+                    _lblTitle.Text = LanguageManager.T("Menu.CleanMemoryFailed");
+                }
+                
+                await Task.Delay(1200); // 停留1.2秒展示结果
             }
             finally
             {

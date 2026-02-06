@@ -95,6 +95,7 @@
         "ThemeEditor": "Theme Editor",
         "CleanMemory": "Clean Memory",
         "CleanMemorySuccess": "Memory Cleaned",
+        "CleanMemoryFailed": "Clean Failed",
         "ShowItems": "Show Items",
 
     "__Comment_Page1__": "--- 1. Main Panel ---",
